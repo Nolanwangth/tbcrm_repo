@@ -1,0 +1,30 @@
+begin;
+set local role service_role;
+do $$
+declare actor uuid; op uuid; customer uuid; proposal uuid:=gen_random_uuid(); published jsonb; snapshot jsonb; version uuid; original uuid; branded uuid; denied boolean; result jsonb;
+begin
+ select id into actor from crm_users where role='admin' and active and not must_change_password limit 1;
+ select id into op from operation_cases limit 1;
+ select id into customer from customers where status='跟进中' limit 1;
+ if actor is null or op is null or customer is null then raise exception 'Test fixtures missing';end if;
+ denied:=false;
+ begin perform crm_mutate_operation(actor,op,'operation_travelers',null,null,'{"traveler_type":"child","full_name":"测试儿童","age":5}',false);exception when check_violation then denied:=true;end;
+ if not denied then raise exception 'Child height optional';end if;
+ denied:=false;
+ begin perform crm_mutate_operation(actor,op,'operation_travelers',null,null,'{"traveler_type":"senior","full_name":"测试老人"}',false);exception when check_violation then denied:=true;end;
+ if not denied then raise exception 'Senior age optional';end if;
+ result:=crm_mutate_operation(actor,op,'operation_travelers',null,null,'{"traveler_type":"child","full_name":"测试婴儿","age":0,"height_cm":60}',false);
+ if not exists(select 1 from operation_travelers where id=(result->>'id')::uuid and age=0 and height_cm=60) then raise exception 'Infant age zero lost';end if;
+ snapshot:=jsonb_build_object('schemaVersion',2,'sourceVersion','2.0.0','customerId',customer,'toolType','itinerary','title','[事务测试] 品牌 PDF','travelerCount',1,'itinerary','{}'::jsonb);
+ perform crm_save_quote_v2(actor,customer,proposal,0,snapshot,null,null);
+ published:=crm_save_quote_v2(actor,customer,proposal,1,snapshot,gen_random_uuid(),'品牌测试');
+ version:=(published->>'versionId')::uuid;
+ original:=crm_register_proposal_pdf(actor,version,customer::text||'/proposals/'||version::text||'.pdf',100,repeat('a',64));
+ branded:=crm_register_branded_pdf(actor,version,customer::text||'/proposals/'||version::text||'-branded-v1.pdf',200,repeat('b',64));
+ if branded=original or branded<>crm_register_branded_pdf(actor,version,customer::text||'/proposals/'||version::text||'-branded-v1.pdf',200,repeat('b',64)) then raise exception 'Branded artifact overwrites original or duplicates';end if;
+ if (select sha256 from crm_proposal_pdf_artifacts where version_id=version)<>repeat('a',64) then raise exception 'Original checksum changed';end if;
+ if (select count(*) from customer_proposal_documents where proposal_version_id=version)<>2 then raise exception 'Separate document links missing';end if;
+ if has_table_privilege('anon','crm_proposal_branded_artifacts','SELECT') or has_table_privilege('authenticated','crm_proposal_branded_artifacts','SELECT') or has_table_privilege('service_role','crm_proposal_branded_artifacts','UPDATE') or has_table_privilege('service_role','crm_proposal_branded_artifacts','DELETE') or has_function_privilege('authenticated','crm_register_branded_pdf(uuid,uuid,text,bigint,text)','EXECUTE') then raise exception 'Artifact grants too broad';end if;
+ raise notice 'PASS: required traveler details, infant age zero, separate immutable branded PDF, idempotence and private grants';
+end $$;
+rollback;
