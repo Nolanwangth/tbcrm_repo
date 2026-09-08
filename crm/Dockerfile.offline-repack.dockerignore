@@ -1,0 +1,11 @@
+**
+!.next
+!.next/standalone
+!.next/standalone/.next
+!.next/standalone/.next/**
+!.next/standalone/server.js
+!.next/standalone/package.json
+!.next/static
+!.next/static/**
+!public
+!public/**

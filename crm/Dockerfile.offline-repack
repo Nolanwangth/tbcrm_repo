@@ -1,0 +1,12 @@
+FROM tripbook-crm-crm:offline-arm64
+USER root
+RUN rm -rf /app/.next \
+  && mkdir -p /app/.next
+COPY .next/standalone/.next /app/.next
+COPY .next/static /app/.next/static
+COPY .next/standalone/server.js /app/server.js
+COPY .next/standalone/package.json /app/package.json
+COPY public /app/public
+RUN chown -R nextjs:nodejs /app/.next /app/public /app/server.js /app/package.json
+ENV TZ=Asia/Shanghai
+USER nextjs

@@ -1,0 +1,229 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+[data-slot="dialog-overlay"], [data-slot="sheet-overlay"], [data-slot="alert-dialog-overlay"] { z-index: 100; }
+[data-slot="dialog-content"], [data-slot="sheet-content"], [data-slot="alert-dialog-content"] { z-index: 110; }
+[data-slot="select-content"], [data-slot="popover-content"], [data-slot="dropdown-menu-content"] { z-index: 120; }
+[data-slot="dialog-content"], [data-slot="alert-dialog-content"] { max-height: calc(100dvh - 2rem); overflow-y: auto; }
+[data-slot="sheet-content"][data-side="right"] { width: min(100vw, 48rem); max-width: min(100vw, 48rem); }
+@media (max-width: 639px) {
+  .crm-compact-stat > div:first-child > span,
+  .crm-compact-stat > div:last-child { display: none; }
+  .crm-compact-stat .crm-metric { font-size: 23px; margin-top: 0.65rem; }
+  .crm-compact-stat .crm-label { font-size: 12px; }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Noto Sans SC", "Inter", -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
+  --font-heading: "Geist", "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+@media print {
+  body * { visibility: hidden !important; }
+  [data-quote-print="true"] { visibility: visible !important; position: absolute !important; inset: 0 !important; border: 0 !important; }
+  [data-proposal-print], [data-proposal-print] * { visibility: visible !important; }
+  [data-proposal-print] { position: absolute; inset: 0; width: 100%; padding: 16mm !important; }
+}
+
+:root {
+  --background: oklch(0.976 0.005 255);
+  --foreground: oklch(0.215 0.027 258);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.215 0.027 258);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.215 0.027 258);
+  --primary: oklch(0.55 0.2 258);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.965 0.006 255);
+  --secondary-foreground: oklch(0.27 0.027 258);
+  --muted: oklch(0.965 0.006 255);
+  --muted-foreground: oklch(0.535 0.027 258);
+  --accent: oklch(0.953 0.018 258);
+  --accent-foreground: oklch(0.29 0.04 258);
+  --destructive: oklch(0.59 0.2 27);
+  --border: oklch(0.918 0.01 255);
+  --input: oklch(0.9 0.012 255);
+  --ring: oklch(0.62 0.16 258);
+  --chart-1: oklch(0.55 0.2 258);
+  --chart-2: oklch(0.64 0.15 206);
+  --chart-3: oklch(0.67 0.16 153);
+  --chart-4: oklch(0.68 0.16 70);
+  --chart-5: oklch(0.59 0.17 310);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.18 0.027 258);
+  --sidebar-foreground: oklch(0.93 0.01 255);
+  --sidebar-primary: oklch(0.66 0.16 258);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.245 0.03 258);
+  --sidebar-accent-foreground: oklch(0.99 0 0);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.66 0.16 258);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-[14px] text-foreground antialiased;
+    line-height: 1.65;
+  }
+  html {
+    @apply font-sans;
+  }
+  ::selection {
+    @apply bg-primary/15 text-foreground;
+  }
+  button,
+  [role="button"],
+  a,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+:root {
+  --background: #f2f6f4;
+  --foreground: #17211d;
+  --card: #fff;
+  --card-foreground: #17211d;
+  --popover: #fff;
+  --popover-foreground: #17211d;
+  --primary: #d65f3a;
+  --primary-foreground: #fff;
+  --secondary: #edf3f0;
+  --secondary-foreground: #35443e;
+  --muted: #edf3f0;
+  --muted-foreground: #596a63;
+  --accent: #e8f0eb;
+  --accent-foreground: #17211d;
+  --border: #cbd6d1;
+  --input: #cbd6d1;
+  --ring: #d65f3a;
+  --radius: 0.8125rem;
+}
+:focus-visible { outline: 3px solid #d65f3a; outline-offset: 3px; }
+@media print { .crm-commandbar { display: none !important; } }
+
+@layer utilities {
+  .crm-panel {
+    @apply rounded-xl border border-slate-200/80 bg-card shadow-[0_1px_2px_rgba(15,23,42,0.025),0_8px_28px_rgba(15,23,42,0.035)];
+  }
+  .crm-panel-muted {
+    @apply rounded-xl border border-slate-200/70 bg-slate-50/70;
+  }
+  .crm-section-header {
+    @apply flex flex-col gap-3 border-b border-slate-200/70 px-5 py-4 sm:flex-row sm:items-center sm:justify-between;
+  }
+  .crm-section-title {
+    @apply text-[14px] font-semibold tracking-[-0.01em] text-slate-950;
+  }
+  .crm-section-description {
+    @apply mt-1 text-sm leading-5 text-muted-foreground;
+  }
+  .crm-label {
+    @apply text-xs font-medium tracking-[0.01em] text-muted-foreground;
+  }
+  .crm-eyebrow {
+    @apply text-[10px] font-semibold tracking-[0.16em] text-primary uppercase;
+  }
+  .crm-metric {
+    @apply font-mono tabular-nums tracking-[-0.035em];
+  }
+  .crm-native-select {
+    @apply h-9 w-full rounded-lg border border-input bg-white px-3 text-[13px] shadow-[0_1px_2px_rgba(15,23,42,0.025)] outline-none transition-[border-color,box-shadow] focus:border-ring focus:ring-3 focus:ring-ring/15;
+  }
+  .crm-empty {
+    @apply grid min-h-52 place-items-center rounded-lg border border-dashed border-slate-200 bg-slate-50/45 p-8 text-center;
+  }
+  .crm-scrollbar {
+    scrollbar-color: oklch(0.82 0.012 255) transparent;
+    scrollbar-width: thin;
+  }
+  .crm-scrollbar::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  .crm-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-slate-300/70;
+  }
+  .crm-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}

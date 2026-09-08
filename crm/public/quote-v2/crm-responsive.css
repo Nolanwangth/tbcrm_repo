@@ -1,0 +1,36 @@
+@media screen {
+  .library-selected-label .inline-restore-button { position:static; font-size:12px; flex-shrink:0; }
+  .quote-collapse-button { background:#d65f3a; border-color:#b94728; box-shadow:0 2px 6px #d65f3a26; }
+  .quote-collapse-button:hover { background:#b94728; }
+  .direct-entry-scroll, .direct-quick-form { background:#f2f6f4; border-color:#cbd6d1; }
+  .direct-day-tabs button.selected { background:#fff0e9; border-color:#d65f3a; box-shadow:none; }
+  .direct-day-tabs button.selected small { color:#a93c20; }
+  .direct-day-context { background:#f7faf8; border-color:#cbd6d1; }
+  .direct-day-context strong { color:#234d3f; }
+}
+.crm-v2-fields:disabled button:disabled { opacity:1; cursor:default!important; }
+.crm-v2-fields:disabled input, .crm-v2-fields:disabled textarea, .crm-v2-fields:disabled select { color:#34443d; opacity:1; -webkit-text-fill-color:#34443d; }
+@media screen and (max-width: 1279px) {
+  .crm-v2-fields > .workspace { width:100%; height:auto; grid-template-columns:minmax(0,1fr); }
+  .direct-workspace.simplified-direct-workspace { grid-template-columns:minmax(0,1fr); }
+  .direct-entry-panel, .quote-panel { min-height:480px; }
+  .direct-entry-scroll { overflow:auto; }
+  .panel { max-width:100%; }
+}
+@media screen and (max-width: 767px) {
+  .crm-v2-editor { min-height:0; }
+  .workspace { padding:6px; gap:12px; }
+  .direct-entry-scroll { padding:8px; }
+  .direct-source-section { padding:10px; }
+  .workspace.direct-workspace .quick-type-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .direct-name-fields, .direct-price-fields { grid-template-columns:minmax(0,1fr); }
+  .direct-form-footer, .panel-header, .direct-section-heading, .quote-canvas-day-overview-title { flex-wrap:wrap; }
+  .panel-header { padding:12px; gap:8px; }
+  .panel-header > div:first-child { flex-wrap:wrap; }
+  .direct-quick-form label, .quick-type-copy strong, .direct-day-tabs button { font-size:13px; }
+  .direct-quick-form input, .direct-quick-form select, .direct-quick-form textarea { font-size:16px; }
+  .quote-canvas { overflow:auto; }
+  .quote-canvas-day-overview-list { overflow-x:auto; }
+  .modal-body { overflow:auto; }
+  .auto-document-side-inputs, .template-library-grid { grid-template-columns:minmax(0,1fr); }
+}
