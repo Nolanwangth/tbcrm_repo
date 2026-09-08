@@ -1,0 +1,10 @@
+"use client";
+import { PrintPreview } from "@/quote-v2/components/PrintPreview";
+import { parseItineraryDocument } from "@/quote-v2/lib/itineraryDocument";
+import type { QuoteV2Snapshot } from "@/lib/quote-v2";
+export function QuoteVersionPrint({ snapshot }: {
+    snapshot: QuoteV2Snapshot;
+}) {
+    const itinerary = snapshot.toolType === 'itinerary' ? parseItineraryDocument(snapshot.itinerary) : null;
+    return <div data-version-print-ready="true"><link rel="stylesheet" href="/quote-v2/styles.css"/><style>{`body{overflow:auto!important}body *{visibility:visible!important}.print-toolbar{display:none!important}.print-preview-layer{position:static!important;background:white!important;overflow:visible!important}.print-sheet{box-shadow:none!important}.itinerary-sheet{max-width:190mm;margin:0 auto;background:white;padding:12mm;font-family:Arial,sans-serif;color:#17211d}.itinerary-day{break-inside:avoid;margin:0 0 22px}.itinerary-day h2{font-size:18px;border-bottom:2px solid #19372e;padding-bottom:8px}.itinerary-day p{white-space:pre-wrap;font-size:12px;line-height:1.65}.itinerary-day h3{font-size:13px;margin:12px 0 2px}@media print{@page{size:A4 ${itinerary ? 'portrait' : 'landscape'};margin:10mm}body{background:white!important}.print-sheet{margin:0!important;padding:0!important;width:100%!important}.itinerary-sheet{padding:0;width:100%}}`}</style>{itinerary ? <article className="itinerary-sheet"><h1>TripBook · Travel Itinerary</h1><p>{itinerary.clientName} · {itinerary.adults} Adults · {itinerary.children} Children · {itinerary.seniors} Seniors</p>{itinerary.days.map(d => <section className="itinerary-day" key={d.dayNumber}><h2>Day {d.dayNumber} | {d.date} | {d.city}</h2><p>{[d.transfer, d.guide, d.start].filter(Boolean).join('\n')}</p>{[d.fullDay, d.morning, d.afternoon, d.evening, d.remarks].filter(s => s.title || s.body).map((s, i) => <div key={i}><h3>{s.title}</h3><p>{s.body}</p></div>)}</section>)}</article> : <PrintPreview mode={snapshot.mode} plan={snapshot.plan} directQuote={snapshot.directQuote} settings={snapshot.settings} onClose={() => window.close()}/>}</div>;
+}
